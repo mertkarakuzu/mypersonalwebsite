@@ -245,7 +245,7 @@ const TerminalHero = () => {
 
               <motion.div 
                 variants={fadeInUp}
-                className="flex justify-center lg:justify-start space-x-4"
+                className="flex justify-center flex-col md:flex-row lg:justify-start mt-0 md:space-x-4"
               >
                 <motion.a 
                   whileHover={{ 
@@ -267,7 +267,7 @@ const TerminalHero = () => {
                   }}
                   whileTap={{ scale: 0.95 }}
                   href="#services" 
-                  className="bg-transparent border-2 border-green-500 text-green-400 hover:bg-green-500 hover:text-black font-bold py-3 px-8 rounded-lg transition-all duration-300 flex items-center font-mono"
+                  className="bg-transparent border-2 md:mt-0 mt-4 border-green-500 text-green-400 hover:bg-green-500 hover:text-black font-bold py-3 px-8 rounded-lg transition-all duration-300 flex items-center font-mono"
                 >
                   <span className="mr-2">$</span>
                   ./view_services.sh

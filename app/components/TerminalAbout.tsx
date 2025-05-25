@@ -81,7 +81,7 @@ const TerminalAbout = () => {
   };
 
   return (
-    <div id="about" className="py-20 bg-black text-green-400 relative overflow-hidden">
+    <div id="about" className="md:py-20 py-10 bg-black text-green-400 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0">
         {/* Matrix Binary Rain */}
@@ -401,7 +401,7 @@ const TerminalAbout = () => {
             </div> */}
 
             {/* Contact Button */}
-            <motion.div className="flex space-x-4">
+            <motion.div className="flex md:flex-row flex-col md:space-x-4">
               <motion.a 
                 whileHover={{ 
                   scale: 1.05,
@@ -422,7 +422,7 @@ const TerminalAbout = () => {
                 }}
                 whileTap={{ scale: 0.95 }}
                 href="/resume.pdf" 
-                className="bg-transparent border-2 border-green-500 text-green-400 hover:bg-green-500 hover:text-black font-bold py-3 px-8 rounded-lg transition-all duration-300 flex items-center font-mono"
+                className="bg-transparent border-2 border-green-500 text-green-400 hover:bg-green-500 hover:text-black font-bold py-3 px-8 rounded-lg transition-all duration-300 flex items-center font-mono md:mt-0 mt-4"
               >
                 <span className="mr-2">$</span>
                 ./download_resume.sh

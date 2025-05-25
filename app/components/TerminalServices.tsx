@@ -156,7 +156,7 @@ const TerminalServices = () => {
   };
 
   return (
-    <section id="services" className="py-20 bg-black text-green-400 relative overflow-hidden">
+    <section id="services" className="md:py-20 py-10 bg-black text-green-400 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0">
         {/* Scanlines */}
