@@ -2,110 +2,20 @@
 
 import Head from 'next/head';
 import { 
-  FaShieldAlt, 
-  FaSearch, 
-  FaUsers, 
-  FaUserShield, 
-  FaCogs, 
-  FaLock,
-  FaCode,
-  FaServer,
-  FaMobileAlt,
-  FaLinkedin,
-  FaGithub,
-  FaEnvelope,
-  FaInstagram,
-  FaTerminal
-} from 'react-icons/fa';
-import { 
   FiMail, 
-  FiPhone, 
-  FiMapPin,
-  FiExternalLink
 } from 'react-icons/fi';
 import { 
   SiInstagram, 
   SiLinkedin, 
   SiGithub 
 } from 'react-icons/si';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
 import TerminalHero from './components/TerminalHero';
 import Nav from './components/Nav';
 import TerminalServices from './components/TerminalServices';
 import TerminalAbout from './components/TerminalAbout';
 
 export default function HomePage() {
-  const [heroRef, heroInView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  });
-
-  const [servicesRef, servicesInView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  });
-
-  const [aboutRef, aboutInView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  });
-
-  const [contactRef, contactInView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  });
-
-  const handleEmailClick = () => {
-    window.location.href = "mailto:krkz.mert@gmail.com";
-  };
-
-  const handlePhoneClick = () => {
-    window.location.href = "tel:+905060921797";
-  };
-
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-  const generateRandomTerminalCommand = () => {
-  const commands = [
-    "sudo nmap -sV -O -T4",
-    "hydra -l admin -P rockyou.txt ssh://",
-    "msfconsole -q -x 'use exploit/multi/handler'",
-    "python3 exploit.py --target 127.0.0.1",
-    "john --wordlist=rockyou.txt hashes.txt",
-    "sqlmap -u 'http://test.com?id=1' --dbs",
-    "aircrack-ng capture.cap -w wordlist.txt",
-    "burpsuite --project-file=test.burp",
-    "wpscan --url blog.example.com --enumerate p",
-    "metasploit-framework/bin/msfvenom -p windows/meterpreter/reverse_tcp",
-    "MertKarakuzu.tar.gz",
-    "sudo everything",
-    "cd Dokuz Eylul Universitesi",
-    "mkdir New-Hacker-Component",
-    "sudo apt install brupsuite"
-  ];
-  return commands[Math.floor(Math.random() * commands.length)];
-};
 
   return (
     <>

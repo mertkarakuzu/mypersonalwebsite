@@ -1,113 +1,100 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
+type ServiceStatus = 'ACTIVE' | 'STANDBY' | 'MAINTENANCE';
+type ServiceColor = 'red' | 'purple' | 'green' | 'cyan' | 'yellow' | 'blue';
+
+interface Service {
+  id: string;
+  title: string;
+  desc: string;
+  command: string;
+  status: ServiceStatus;
+  color: ServiceColor;
+  tools: string[];
+  items: string[];
+  ports: string[];
+}
+
+interface ColorClasses {
+  border: string;
+  bg: string;
+  text: string;
+  glow: string;
+}
+
 const TerminalServices = () => {
-  const servicesRef = useRef(null);
-  const servicesInView = useInView(servicesRef, { once: true, threshold: 0.1 });
-  const [activeService, setActiveService] = useState(0);
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const servicesRef = useRef<HTMLDivElement>(null);
+  const servicesInView = useInView(servicesRef, { once: true, amount: 0.1 });
+  const [activeService, setActiveService] = useState<number | null>(null);
+  const [currentTime] = useState(new Date());
 
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const services = [
+  const services: Service[] = [
     {
-      id: "pentest",
-      title: "Penetration Testing",
-      command: "./pentest.sh",
-      desc: "Simulate real-world attacks to identify vulnerabilities before malicious actors can exploit them.",
-      tools: ["nmap", "metasploit", "burpsuite", "sqlmap"],
-      items: [
-        "Web Application Testing",
-        "Network Infrastructure Testing", 
-        "API Security Assessment",
-        "Mobile App Testing"
-      ],
-      status: "ACTIVE",
-      ports: ["22/tcp", "80/tcp", "443/tcp", "8080/tcp"],
-      color: "red"
+      id: 'pentest',
+      title: 'Penetration Testing',
+      desc: 'Comprehensive security assessment of your systems',
+      command: 'nmap -sV -sC target.com',
+      status: 'ACTIVE',
+      color: 'red',
+      tools: ['Nmap', 'Metasploit', 'Burp Suite'],
+      items: ['Vulnerability Assessment', 'Exploitation Testing', 'Post-Exploitation Analysis'],
+      ports: ['22', '80', '443']
     },
     {
-      id: "vuln_scan",
-      title: "Vulnerability Assessment",
-      command: "./vuln_scan.sh",
-      desc: "Systematic review of security weaknesses in your systems with prioritized remediation guidance.",
-      tools: ["nessus", "openvas", "nuclei", "nikto"],
-      items: [
-        "Automated Scanning",
-        "Manual Verification",
-        "Risk Scoring & Prioritization",
-        "Compliance Mapping"
-      ],
-      status: "SCANNING",
-      ports: ["21/tcp", "23/tcp", "53/tcp", "445/tcp"],
-      color: "purple"
+      id: 'vulnscan',
+      title: 'Vulnerability Scanning',
+      desc: 'Automated security scanning and analysis',
+      command: 'nessus -s target.com',
+      status: 'STANDBY',
+      color: 'purple',
+      tools: ['Nessus', 'OpenVAS', 'Nexpose'],
+      items: ['Automated Scanning', 'Vulnerability Analysis', 'Risk Assessment'],
+      ports: ['22', '80', '443', '8080']
     },
     {
-      id: "social_eng", 
-      title: "Social Engineering",
-      command: "./social_eng.sh",
-      desc: "Test your organization's human defenses against manipulation and deception tactics.",
-      tools: ["gophish", "setoolkit", "king-phisher", "evilginx"],
-      items: [
-        "Phishing Campaigns",
-        "Vishing Attacks",
-        "Physical Security Testing",
-        "OSINT Gathering"
-      ],
-      status: "READY",
-      ports: ["25/tcp", "110/tcp", "143/tcp", "993/tcp"],
-      color: "green"
+      id: 'websec',
+      title: 'Web Security',
+      desc: 'Specialized web application security testing',
+      command: 'burpsuite --project=webapp',
+      status: 'ACTIVE',
+      color: 'green',
+      tools: ['Burp Suite', 'OWASP ZAP', 'Acunetix'],
+      items: ['OWASP Testing', 'API Security', 'Authentication Testing'],
+      ports: ['80', '443', '8080', '8443']
     },
     {
-      id: "awareness",
-      title: "Security Awareness",
-      command: "./awareness.sh", 
-      desc: "Transform your employees into your first line of defense against cyber threats.",
-      tools: ["training-platform", "phishing-sim", "metrics", "reporting"],
-      items: [
-        "Interactive Workshops",
-        "Phishing Simulations", 
-        "Policy Development",
-        "Metrics & Reporting"
-      ],
-      status: "TRAINING",
-      ports: ["80/tcp", "443/tcp", "8443/tcp"],
-      color: "cyan"
+      id: 'netsec',
+      title: 'Network Security',
+      desc: 'Network infrastructure security assessment',
+      command: 'nmap -sS -sV -p- target.com',
+      status: 'STANDBY',
+      color: 'cyan',
+      tools: ['Nmap', 'Wireshark', 'Aircrack-ng'],
+      items: ['Network Mapping', 'Traffic Analysis', 'Wireless Security'],
+      ports: ['21', '22', '23', '25', '80', '443']
     },
     {
-      id: "vciso",
-      title: "vCISO Services",
-      command: "./vciso.sh",
-      desc: "Executive-level security leadership and strategy without the full-time cost.",
-      tools: ["governance", "compliance", "strategy", "incident-response"],
-      items: [
-        "Security Strategy",
-        "Risk Management",
-        "Incident Response",
-        "Board Reporting"
-      ],
-      status: "CONSULTING",
-      ports: ["22/tcp", "443/tcp"],
-      color: "yellow"
+      id: 'social',
+      title: 'Social Engineering',
+      desc: 'Human element security testing',
+      command: 'gophish --campaign phishing.json',
+      status: 'MAINTENANCE',
+      color: 'yellow',
+      tools: ['Gophish', 'SET', 'Maltego'],
+      items: ['Phishing Tests', 'Social Media Analysis', 'Physical Security'],
+      ports: ['25', '465', '587']
     },
     {
-      id: "compliance",
-      title: "Compliance Auditing",
-      command: "./compliance.sh",
-      desc: "Achieve and maintain compliance with industry standards and regulations.",
-      tools: ["iso27001", "pci-dss", "hipaa", "gdpr"],
-      items: [
-        "Gap Analysis",
-        "Policy Development",
-        "Audit Support",
-        "Continuous Monitoring"
-      ],
-      status: "AUDITING",
-      ports: ["443/tcp", "636/tcp"],
-      color: "blue"
+      id: 'forensics',
+      title: 'Digital Forensics',
+      desc: 'Incident response and forensic analysis',
+      command: 'volatility -f memdump.raw',
+      status: 'ACTIVE',
+      color: 'blue',
+      tools: ['Volatility', 'Autopsy', 'FTK'],
+      items: ['Memory Analysis', 'Disk Forensics', 'Network Forensics'],
+      ports: ['22', '3389', '5900']
     }
   ];
 
@@ -131,28 +118,59 @@ const TerminalServices = () => {
     }
   };
 
-  const getStatusColor = (status) => {
-    switch(status) {
-      case 'ACTIVE': return 'text-green-400';
-      case 'SCANNING': return 'text-yellow-400';
-      case 'READY': return 'text-cyan-400';
-      case 'TRAINING': return 'text-purple-400';
-      case 'CONSULTING': return 'text-orange-400';
-      case 'AUDITING': return 'text-blue-400';
-      default: return 'text-gray-400';
+  const getStatusColor = (status: ServiceStatus): string => {
+    switch (status) {
+      case 'ACTIVE':
+        return 'text-green-400';
+      case 'STANDBY':
+        return 'text-yellow-400';
+      case 'MAINTENANCE':
+        return 'text-red-400';
+      default:
+        return 'text-gray-400';
     }
   };
 
-  const getColorClasses = (color) => {
-    const colors = {
-      red: { border: 'border-red-500', bg: 'bg-red-500/10', text: 'text-red-400', glow: 'shadow-red-500/20' },
-      purple: { border: 'border-purple-500', bg: 'bg-purple-500/10', text: 'text-purple-400', glow: 'shadow-purple-500/20' },
-      green: { border: 'border-green-500', bg: 'bg-green-500/10', text: 'text-green-400', glow: 'shadow-green-500/20' },
-      cyan: { border: 'border-cyan-500', bg: 'bg-cyan-500/10', text: 'text-cyan-400', glow: 'shadow-cyan-500/20' },
-      yellow: { border: 'border-yellow-500', bg: 'bg-yellow-500/10', text: 'text-yellow-400', glow: 'shadow-yellow-500/20' },
-      blue: { border: 'border-blue-500', bg: 'bg-blue-500/10', text: 'text-blue-400', glow: 'shadow-blue-500/20' }
+  const getColorClasses = (color: ServiceColor): ColorClasses => {
+    const colorMap: Record<ServiceColor, ColorClasses> = {
+      red: {
+        border: 'border-red-500/30',
+        bg: 'bg-red-500/10',
+        text: 'text-red-400',
+        glow: 'rgba(239, 68, 68'
+      },
+      purple: {
+        border: 'border-purple-500/30',
+        bg: 'bg-purple-500/10',
+        text: 'text-purple-400',
+        glow: 'rgba(168, 85, 247'
+      },
+      green: {
+        border: 'border-green-500/30',
+        bg: 'bg-green-500/10',
+        text: 'text-green-400',
+        glow: 'rgba(34, 197, 94'
+      },
+      cyan: {
+        border: 'border-cyan-500/30',
+        bg: 'bg-cyan-500/10',
+        text: 'text-cyan-400',
+        glow: 'rgba(34, 211, 238'
+      },
+      yellow: {
+        border: 'border-yellow-500/30',
+        bg: 'bg-yellow-500/10',
+        text: 'text-yellow-400',
+        glow: 'rgba(234, 179, 8'
+      },
+      blue: {
+        border: 'border-blue-500/30',
+        bg: 'bg-blue-500/10',
+        text: 'text-blue-400',
+        glow: 'rgba(59, 130, 246'
+      }
     };
-    return colors[color] || colors.red;
+    return colorMap[color];
   };
 
   return (
@@ -222,7 +240,7 @@ const TerminalServices = () => {
             className="text-xl text-gray-300 max-w-3xl mx-auto font-mono"
           >
             <span className="text-red-400">root@kali</span><span className="text-white">:</span><span className="text-blue-400">~</span><span className="text-white">$ </span>
-            echo "Comprehensive cybersecurity solutions for enterprise defense"
+            echo &quot;Comprehensive cybersecurity solutions for enterprise defense&quot;
           </motion.p>
         </motion.div>
 

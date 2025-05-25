@@ -3,7 +3,7 @@ import { motion, useInView } from 'framer-motion';
 
 const TerminalHero = () => {
   const heroRef = useRef(null);
-  const heroInView = useInView(heroRef, { once: true, threshold: 0.2 });
+  const heroInView = useInView(heroRef, { once: true, amount: 0.2 });
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -225,7 +225,7 @@ const TerminalHero = () => {
                     transition={{ duration: 2, delay: 1 }}
                     className="text-green-400 overflow-hidden whitespace-nowrap"
                   >
-                    whoami | grep -i "ethical hacker"
+                    whoami | grep -i &quot;ethical hacker&quot;
                   </motion.span>
                   <motion.span
                     animate={{ 
