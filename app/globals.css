@@ -7,6 +7,23 @@
   --foreground: #171717;
 }
 
+@keyframes terminalFlow {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-10%);
+  }
+}
+
+.animate-terminalFlow {
+  animation: terminalFlow 1700ms linear infinite;
+}
+
+.text-2sm{
+  font-size: 9px;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
