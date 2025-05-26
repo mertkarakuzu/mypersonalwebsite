@@ -1,114 +1,101 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
+type ServiceStatus = 'ACTIVE' | 'STANDBY' | 'MAINTENANCE';
+type ServiceColor = 'red' | 'purple' | 'green' | 'cyan' | 'yellow' | 'blue';
+
+interface Service {
+  id: string;
+  title: string;
+  desc: string;
+  command: string;
+  status: ServiceStatus;
+  color: ServiceColor;
+  tools: string[];
+  items: string[];
+  ports: string[];
+}
+
+interface ColorClasses {
+  border: string;
+  bg: string;
+  text: string;
+  glow: string;
+}
+
 const TerminalServices = () => {
-  const servicesRef = useRef(null);
-  const servicesInView = useInView(servicesRef, { once: true, threshold: 0.1 });
-  const [activeService, setActiveService] = useState(0);
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const servicesRef = useRef<HTMLDivElement>(null);
+  const servicesInView = useInView(servicesRef, { once: true, amount: 0.1 });
+  const [activeService, setActiveService] = useState<number | null>(null);
+  const [currentTime] = useState(new Date());
 
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const services = [
+  const services: Service[] = [
     {
-      id: "pentest",
-      title: "Penetration Testing",
-      command: "./pentest.sh",
-      desc: "Simulate real-world attacks to identify vulnerabilities before malicious actors can exploit them.",
-      tools: ["nmap", "metasploit", "burpsuite", "sqlmap"],
-      items: [
-        "Web Application Testing",
-        "Network Infrastructure Testing", 
-        "API Security Assessment",
-        "Mobile App Testing"
-      ],
-      status: "ACTIVE",
-      ports: ["22/tcp", "80/tcp", "443/tcp", "8080/tcp"],
-      color: "red"
+      id: 'pentest',
+      title: 'Penetration Testing',
+      desc: 'Comprehensive security assessment of your systems',
+      command: 'nmap -sV -sC target.com',
+      status: 'ACTIVE',
+      color: 'red',
+      tools: ['Nmap', 'Metasploit', 'Burp Suite'],
+      items: ['Vulnerability Assessment', 'Exploitation Testing', 'Post-Exploitation Analysis'],
+      ports: ['22', '80', '443']
     },
     {
-      id: "vuln_scan",
-      title: "Vulnerability Assessment",
-      command: "./vuln_scan.sh",
-      desc: "Systematic review of security weaknesses in your systems with prioritized remediation guidance.",
-      tools: ["nessus", "openvas", "nuclei", "nikto"],
-      items: [
-        "Automated Scanning",
-        "Manual Verification",
-        "Risk Scoring & Prioritization",
-        "Compliance Mapping"
-      ],
-      status: "SCANNING",
-      ports: ["21/tcp", "23/tcp", "53/tcp", "445/tcp"],
-      color: "purple"
+      id: 'vulnscan',
+      title: 'Vulnerability Scanning',
+      desc: 'Automated security scanning and analysis',
+      command: 'nessus -s target.com',
+      status: 'STANDBY',
+      color: 'purple',
+      tools: ['Nessus', 'OpenVAS', 'Nexpose'],
+      items: ['Automated Scanning', 'Vulnerability Analysis', 'Risk Assessment'],
+      ports: ['22', '80', '443', '8080']
     },
     {
-      id: "social_eng", 
-      title: "Social Engineering",
-      command: "./social_eng.sh",
-      desc: "Test your organization's human defenses against manipulation and deception tactics.",
-      tools: ["gophish", "setoolkit", "king-phisher", "evilginx"],
-      items: [
-        "Phishing Campaigns",
-        "Vishing Attacks",
-        "Physical Security Testing",
-        "OSINT Gathering"
-      ],
-      status: "READY",
-      ports: ["25/tcp", "110/tcp", "143/tcp", "993/tcp"],
-      color: "green"
+      id: 'websec',
+      title: 'Web Security',
+      desc: 'Specialized web application security testing',
+      command: 'burpsuite --project=webapp',
+      status: 'ACTIVE',
+      color: 'green',
+      tools: ['Burp Suite', 'OWASP ZAP', 'Acunetix'],
+      items: ['OWASP Testing', 'API Security', 'Authentication Testing'],
+      ports: ['80', '443', '8080', '8443']
     },
     {
-      id: "awareness",
-      title: "Security Awareness",
-      command: "./awareness.sh", 
-      desc: "Transform your employees into your first line of defense against cyber threats.",
-      tools: ["training-platform", "phishing-sim", "metrics", "reporting"],
-      items: [
-        "Interactive Workshops",
-        "Phishing Simulations", 
-        "Policy Development",
-        "Metrics & Reporting"
-      ],
-      status: "TRAINING",
-      ports: ["80/tcp", "443/tcp", "8443/tcp"],
-      color: "cyan"
+      id: 'netsec',
+      title: 'Network Security',
+      desc: 'Network infrastructure security assessment',
+      command: 'nmap -sS -sV -p- target.com',
+      status: 'STANDBY',
+      color: 'cyan',
+      tools: ['Nmap', 'Wireshark', 'Aircrack-ng'],
+      items: ['Network Mapping', 'Traffic Analysis', 'Wireless Security'],
+      ports: ['21', '22', '23', '25', '80', '443']
     },
     {
-      id: "vciso",
-      title: "vCISO Services",
-      command: "./vciso.sh",
-      desc: "Executive-level security leadership and strategy without the full-time cost.",
-      tools: ["governance", "compliance", "strategy", "incident-response"],
-      items: [
-        "Security Strategy",
-        "Risk Management",
-        "Incident Response",
-        "Board Reporting"
-      ],
-      status: "CONSULTING",
-      ports: ["22/tcp", "443/tcp"],
-      color: "yellow"
+      id: 'social',
+      title: 'Social Engineering',
+      desc: 'Human element security testing',
+      command: 'gophish --campaign phishing.json',
+      status: 'MAINTENANCE',
+      color: 'yellow',
+      tools: ['Gophish', 'SET', 'Maltego'],
+      items: ['Phishing Tests', 'Social Media Analysis', 'Physical Security'],
+      ports: ['25', '465', '587']
     },
-    {
-      id: "compliance",
-      title: "Compliance Auditing",
-      command: "./compliance.sh",
-      desc: "Achieve and maintain compliance with industry standards and regulations.",
-      tools: ["iso27001", "pci-dss", "hipaa", "gdpr"],
-      items: [
-        "Gap Analysis",
-        "Policy Development",
-        "Audit Support",
-        "Continuous Monitoring"
-      ],
-      status: "AUDITING",
-      ports: ["443/tcp", "636/tcp"],
-      color: "blue"
-    }
+    // {
+    //   id: 'forensics',
+    //   title: 'Digital Forensics',
+    //   desc: 'Incident response and forensic analysis',
+    //   command: 'volatility -f memdump.raw',
+    //   status: 'ACTIVE',
+    //   color: 'blue',
+    //   tools: ['Volatility', 'Autopsy', 'FTK'],
+    //   items: ['Memory Analysis', 'Disk Forensics', 'Network Forensics'],
+    //   ports: ['22', '3389', '5900']
+    // }
   ];
 
   const staggerContainer = {
@@ -131,32 +118,63 @@ const TerminalServices = () => {
     }
   };
 
-  const getStatusColor = (status) => {
-    switch(status) {
-      case 'ACTIVE': return 'text-green-400';
-      case 'SCANNING': return 'text-yellow-400';
-      case 'READY': return 'text-cyan-400';
-      case 'TRAINING': return 'text-purple-400';
-      case 'CONSULTING': return 'text-orange-400';
-      case 'AUDITING': return 'text-blue-400';
-      default: return 'text-gray-400';
+  const getStatusColor = (status: ServiceStatus): string => {
+    switch (status) {
+      case 'ACTIVE':
+        return 'text-green-400';
+      case 'STANDBY':
+        return 'text-yellow-400';
+      case 'MAINTENANCE':
+        return 'text-red-400';
+      default:
+        return 'text-gray-400';
     }
   };
 
-  const getColorClasses = (color) => {
-    const colors = {
-      red: { border: 'border-red-500', bg: 'bg-red-500/10', text: 'text-red-400', glow: 'shadow-red-500/20' },
-      purple: { border: 'border-purple-500', bg: 'bg-purple-500/10', text: 'text-purple-400', glow: 'shadow-purple-500/20' },
-      green: { border: 'border-green-500', bg: 'bg-green-500/10', text: 'text-green-400', glow: 'shadow-green-500/20' },
-      cyan: { border: 'border-cyan-500', bg: 'bg-cyan-500/10', text: 'text-cyan-400', glow: 'shadow-cyan-500/20' },
-      yellow: { border: 'border-yellow-500', bg: 'bg-yellow-500/10', text: 'text-yellow-400', glow: 'shadow-yellow-500/20' },
-      blue: { border: 'border-blue-500', bg: 'bg-blue-500/10', text: 'text-blue-400', glow: 'shadow-blue-500/20' }
+  const getColorClasses = (color: ServiceColor): ColorClasses => {
+    const colorMap: Record<ServiceColor, ColorClasses> = {
+      red: {
+        border: 'border-red-500/30',
+        bg: 'bg-red-500/10',
+        text: 'text-red-400',
+        glow: 'rgba(239, 68, 68'
+      },
+      purple: {
+        border: 'border-purple-500/30',
+        bg: 'bg-purple-500/10',
+        text: 'text-purple-400',
+        glow: 'rgba(168, 85, 247'
+      },
+      green: {
+        border: 'border-green-500/30',
+        bg: 'bg-green-500/10',
+        text: 'text-green-400',
+        glow: 'rgba(34, 197, 94'
+      },
+      cyan: {
+        border: 'border-cyan-500/30',
+        bg: 'bg-cyan-500/10',
+        text: 'text-cyan-400',
+        glow: 'rgba(34, 211, 238'
+      },
+      yellow: {
+        border: 'border-yellow-500/30',
+        bg: 'bg-yellow-500/10',
+        text: 'text-yellow-400',
+        glow: 'rgba(234, 179, 8'
+      },
+      blue: {
+        border: 'border-blue-500/30',
+        bg: 'bg-blue-500/10',
+        text: 'text-blue-400',
+        glow: 'rgba(59, 130, 246'
+      }
     };
-    return colors[color] || colors.red;
+    return colorMap[color];
   };
 
   return (
-    <section id="services" className="md:py-20 py-10 bg-black text-green-400 relative overflow-hidden">
+    <section id="services" className="md:py-20 py-4 bg-black text-green-400 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0">
         {/* Scanlines */}
@@ -197,13 +215,13 @@ const TerminalServices = () => {
           initial="hidden"
           animate={servicesInView ? "visible" : "hidden"}
           variants={staggerContainer}
-          className="text-center mb-16"
+          className="text-center md:mb-16 mb-6"
         >
           <motion.div 
             variants={fadeInUp}
-            className="bg-gray-900 rounded-lg border border-gray-700 p-6 inline-block mb-8"
+            className="bg-gray-900 rounded-lg border border-gray-700 p-6 md:inline-block hidden mb-8"
           >
-            <div className="font-mono text-sm space-y-2">
+            <div className="font-mono md:text-sm text-xs  space-y-2">
               <div className="text-red-400">root@kali:~$ ls -la /opt/security-toolkit/</div>
               <div className="text-gray-300 ml-4">total 6</div>
               <div className="text-gray-300 ml-4">drwxr-xr-x 2 root root 4096 {currentTime.toLocaleDateString()} {currentTime.toLocaleTimeString()} .</div>
@@ -213,142 +231,142 @@ const TerminalServices = () => {
 
           <motion.h2 
             variants={fadeInUp}
-            className="text-4xl font-bold mb-6 font-mono"
+            className="md:text-4xl text-2xl font-bold md:mb-6 mb-3 font-mono"
           >
             <span className="text-red-500">Security</span> <span className="text-green-400">Toolkit</span>
           </motion.h2>
           <motion.p 
             variants={fadeInUp}
-            className="text-xl text-gray-300 max-w-3xl mx-auto font-mono"
+            className="md:text-xl text-sm text-gray-300 max-w-3xl mx-auto font-mono"
           >
             <span className="text-red-400">root@kali</span><span className="text-white">:</span><span className="text-blue-400">~</span><span className="text-white">$ </span>
-            echo "Comprehensive cybersecurity solutions for enterprise defense"
+            echo &quot;Comprehensive cybersecurity solutions for enterprise defense&quot;
           </motion.p>
         </motion.div>
 
         {/* Services Grid */}
         <motion.div
-          ref={servicesRef}
-          initial="hidden"
-          animate={servicesInView ? "visible" : "hidden"}
-          variants={staggerContainer}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {services.map((service, index) => {
-            const colorClasses = getColorClasses(service.color);
-            return (
-              <motion.div
-                key={service.id}
-                variants={fadeInUp}
-                whileHover={{ 
-                  y: -10,
-                  boxShadow: `0 20px 40px ${colorClasses.glow.split('/')[0]}/50)`
-                }}
-                onHoverStart={() => setActiveService(index)}
-                className={`bg-gray-900 rounded-lg border ${colorClasses.border} hover:${colorClasses.bg} transition-all duration-300 overflow-hidden group cursor-pointer`}
-              >
-                {/* Terminal Header */}
-                <div className="bg-gray-800 px-4 py-2 flex items-center justify-between border-b border-gray-700">
-                  <div className="flex space-x-2">
-                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  </div>
-                  <div className="text-gray-400 text-xs font-mono">{service.id}@security</div>
-                  <div className={`text-xs font-mono ${getStatusColor(service.status)}`}>
-                    [{service.status}]
-                  </div>
-                </div>
+  ref={servicesRef}
+  initial="hidden"
+  animate={servicesInView ? "visible" : "hidden"}
+  variants={staggerContainer}
+  className="flex flex-wrap justify-center gap-6"
+>
+  {services.map((service, index) => {
+    const colorClasses = getColorClasses(service.color);
+    return (
+      <motion.div
+        key={service.id}
+        variants={fadeInUp}
+        whileHover={{ 
+          y: -10,
+          boxShadow: `0 20px 40px ${colorClasses.glow.split('/')[0]}/50)`
+        }}
+        onHoverStart={() => setActiveService(index)}
+        className={`bg-gray-900 rounded-lg border ${colorClasses.border} hover:${colorClasses.bg} transition-all duration-300 overflow-hidden group cursor-pointer w-full max-w-sm flex-none md:w-80 lg:w-96`}
+      >
+        {/* Terminal Header */}
+        <div className="bg-gray-800 px-4 py-2 flex items-center justify-between border-b border-gray-700">
+          <div className="flex space-x-2">
+            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+          </div>
+          <div className="text-gray-400 text-xs font-mono">{service.id}@security</div>
+          <div className={`text-xs font-mono ${getStatusColor(service.status)}`}>
+            [{service.status}]
+          </div>
+        </div>
 
-                {/* Terminal Content */}
-                <div className="p-6">
-                  {/* Command Line */}
-                  <div className="font-mono text-sm mb-4">
-                    <span className="text-red-400">root@kali</span>
-                    <span className="text-white">:</span>
-                    <span className="text-blue-400">~</span>
-                    <span className="text-white">$ </span>
-                    <span className={colorClasses.text}>{service.command}</span>
-                    <motion.span
-                      animate={{ 
-                        opacity: activeService === index ? [0, 1, 0] : 0,
-                        transition: {
-                          duration: 1,
-                          repeat: activeService === index ? Infinity : 0
-                        }
-                      }}
-                      className="ml-1 text-green-400"
-                    >
-                      █
-                    </motion.span>
-                  </div>
+        {/* Terminal Content */}
+        <div className="md:p-6 pb-2 pt-4 pl-4 pr-4">
+          {/* Command Line */}
+          <div className="font-mono text-sm md:mb-4 mb-2">
+            <span className="text-red-400">root@kali</span>
+            <span className="text-white">:</span>
+            <span className="text-blue-400">~</span>
+            <span className="text-white">$ </span>
+            <span className={`md:text-sm text-xs ${colorClasses.text}`}>{service.command}</span>
+            <motion.span
+              animate={{ 
+                opacity: activeService === index ? [0, 1, 0] : 0,
+                transition: {
+                  duration: 1,
+                  repeat: activeService === index ? Infinity : 0
+                }
+              }}
+              className="ml-1 text-green-400"
+            >
+              █
+            </motion.span>
+          </div>
 
-                  {/* Service Info */}
-                  <h3 className={`text-xl font-bold mb-3 font-mono ${colorClasses.text}`}>
-                    {service.title}
-                  </h3>
-                  <p className="text-gray-300 mb-4 text-sm">{service.desc}</p>
+          {/* Service Info */}
+          <h3 className={`md:text-xl text-base font-bold md:mb-3 mb-2 font-mono ${colorClasses.text}`}>
+            {service.title}
+          </h3>
+          <p className="text-gray-300 md:mb-4 m-2 text-sm">{service.desc}</p>
 
-                  {/* Tools */}
-                  <div className="mb-4">
-                    <div className="text-xs text-gray-500 mb-2 font-mono">TOOLS:</div>
-                    <div className="flex flex-wrap gap-2">
-                      {service.tools.map((tool, i) => (
-                        <span 
-                          key={i}
-                          className={`px-2 py-1 ${colorClasses.bg} ${colorClasses.text} text-xs rounded font-mono border ${colorClasses.border}`}
-                        >
-                          {tool}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+          {/* Tools */}
+          <div className="md:mb-4 mb-2">
+            <div className="text-xs text-gray-500 mb-2 font-mono">TOOLS:</div>
+            <div className="flex flex-wrap gap-2">
+              {service.tools.map((tool, i) => (
+                <span 
+                  key={i}
+                  className={`px-2 py-1 ${colorClasses.bg} ${colorClasses.text} text-xs rounded font-mono border ${colorClasses.border}`}
+                >
+                  {tool}
+                </span>
+              ))}
+            </div>
+          </div>
 
-                  {/* Features */}
-                  <div className="mb-4">
-                    <div className="text-xs text-gray-500 mb-2 font-mono">FEATURES:</div>
-                    <ul className="space-y-1 text-sm">
-                      {service.items.map((item, i) => (
-                        <li key={i} className="flex items-center text-gray-300">
-                          <span className={`w-2 h-2 ${colorClasses.bg} rounded-full mr-2 border ${colorClasses.border}`}></span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+          {/* Features */}
+          <div className="mb-4">
+            <div className="text-xs text-gray-500 mb-2 font-mono">FEATURES:</div>
+            <ul className="space-y-1 text-sm">
+              {service.items.map((item, i) => (
+                <li key={i} className="flex items-center text-gray-300">
+                  <span className={`w-2 h-2 ${colorClasses.bg} rounded-full mr-2 border ${colorClasses.border}`}></span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
 
-                  {/* Port Info */}
-                  <div className="border-t border-gray-700 pt-4">
-                    <div className="text-xs text-gray-500 mb-2 font-mono">COMMON PORTS:</div>
-                    <div className="flex flex-wrap gap-2">
-                      {service.ports.map((port, i) => (
-                        <span key={i} className="text-xs font-mono text-gray-400 bg-gray-800 px-2 py-1 rounded">
-                          {port}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+          {/* Port Info */}
+          <div className="border-t border-gray-700 md:pt-4 pt-3">
+            <div className="text-xs text-gray-500 md:mb-2 mb-1 font-mono">COMMON PORTS:</div>
+            <div className="flex flex-wrap gap-2">
+              {service.ports.map((port, i) => (
+                <span key={i} className="text-xs font-mono text-gray-400 bg-gray-800 px-2 py-1 rounded">
+                  {port}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
 
-                {/* Execute Button */}
-                <div className="px-6 pb-6">
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`w-full py-2 bg-transparent border ${colorClasses.border} ${colorClasses.text} hover:${colorClasses.bg} font-mono text-sm rounded transition-all duration-300`}
-                  >
-                    $ sudo {service.command} --engage
-                  </motion.button>
-                </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+        {/* Execute Button */}
+        <div className="md:px-6 md:pb-6 px-4 py-4">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className={`w-full py-2 bg-transparent border ${colorClasses.border} ${colorClasses.text} hover:${colorClasses.bg} font-mono  md:text-sm text-xs rounded transition-all duration-300`}
+          >
+            $ sudo {service.command} --engage
+          </motion.button>
+        </div>
+      </motion.div>
+    );
+  })}
+</motion.div>
 
         {/* Bottom Terminal Output */}
         <motion.div 
           variants={fadeInUp}
-          className="mt-16 bg-gray-900 rounded-lg border border-gray-700 p-6"
+          className="mt-16 bg-gray-900 rounded-lg border md:block hidden border-gray-700 md:p-6 p-2"
         >
           <div className="font-mono text-sm space-y-2">
             <div className="text-red-400">root@kali:~$ systemctl status security-services</div>

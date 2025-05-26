@@ -3,7 +3,7 @@ import { motion, useInView } from 'framer-motion';
 
 const TerminalHero = () => {
   const heroRef = useRef(null);
-  const heroInView = useInView(heroRef, { once: true, threshold: 0.2 });
+  const heroInView = useInView(heroRef, { once: true, amount: 0.2 });
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -84,7 +84,7 @@ const TerminalHero = () => {
       initial="hidden"
       animate={heroInView ? "visible" : "hidden"}
       variants={staggerContainer}
-      className="bg-black text-green-400 pb-16 pt-4 relative overflow-hidden min-h-screen flex items-center"
+      className="bg-black text-green-400 pb-4 pt-4 relative overflow-hidden min-h-screen flex items-center"
     >
       {/* Terminal Background */}
       <div className="absolute inset-0 bg-black">
@@ -123,17 +123,29 @@ const TerminalHero = () => {
       </div>
 
       <div className="container mx-auto px-6 relative z-10 flex items-center min-h-screen">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 w-full items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 md:gap-12 gap-6 w-full items-center">
           
           {/* Left Side - Kali Dragon and Terminal */}
-          <div className="space-y-6">
+          <div className="space-y-6 overflow-hidden">
             {/* ASCII Dragon */}
             <motion.div 
+            animate={{
+              textShadow: [
+                "0 0 5px #ef4444",
+                "0 0 10px #ef4444, 0 0 20px #ef4444",
+                "0 0 5px #ef4444"
+              ]
+            }}
+            transition={{
+                duration: 1,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
               variants={fadeInUp}
               className="font-mono text-2sm sm:text-sm text-red-400 whitespace-pre leading-tight"
             >
               {kaliDragon}
-            </motion.div>
+          </motion.div>
 
             {/* Terminal Window */}
             <motion.div 
@@ -152,7 +164,7 @@ const TerminalHero = () => {
               </div>
 
               {/* Terminal Content */}
-              <div className="p-4 h-64 overflow-hidden relative bg-black">
+              <div className="p-4 md:h-64 h-36 overflow-hidden relative bg-black">
                 <div className="space-y-1">
                   {terminalCommands.map((cmd, index) => (
                     <motion.div
@@ -205,7 +217,7 @@ const TerminalHero = () => {
           {/* Right Side - Main Content */}
           <div className="text-center lg:text-left space-y-8">
             <motion.div variants={fadeInUp}>
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 font-mono">
+              <h1 className="text-4xl md:text-6xl font-bold mb-4 font-mono">
                 <span className='text-red-500 md:text-5xl text-3xl'>Cybersecurity {' - '} <br/></span>
                 <span className="text-red-500">Red</span> Team{' '}
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-red-800">
@@ -213,7 +225,7 @@ const TerminalHero = () => {
                 </span>
               </h1>
               
-              <div className="text-md md:text-md mb-8 text-gray-300 font-mono space-y-2">
+              <div className="text-xs md:text-md mb-8 text-gray-300 font-mono space-y-2">
                 <div className="flex items-center justify-center lg:justify-start">
                   <span className="text-red-400">root@kali</span>
                   <span className="text-white">:</span>
@@ -225,7 +237,7 @@ const TerminalHero = () => {
                     transition={{ duration: 2, delay: 1 }}
                     className="text-green-400 overflow-hidden whitespace-nowrap"
                   >
-                    whoami | grep -i "ethical hacker"
+                    whoami | grep -i &quot;ethical hacker&quot;
                   </motion.span>
                   <motion.span
                     animate={{ 
@@ -267,7 +279,7 @@ const TerminalHero = () => {
                   }}
                   whileTap={{ scale: 0.95 }}
                   href="#services" 
-                  className="bg-transparent border-2 md:mt-0 mt-4 border-green-500 text-green-400 hover:bg-green-500 hover:text-black font-bold py-3 px-8 rounded-lg transition-all duration-300 flex items-center font-mono"
+                  className="bg-transparent md:text-lg text-sm border-2 md:mt-0 mt-4 border-green-500 text-green-400 hover:bg-green-500 hover:text-black font-bold py-3 px-8 rounded-lg transition-all duration-300 flex items-center font-mono"
                 >
                   <span className="mr-2">$</span>
                   ./view_services.sh
@@ -279,7 +291,7 @@ const TerminalHero = () => {
                 variants={fadeInUp}
                 className="mt-8 p-4 bg-gray-900/50 rounded-lg border border-gray-700 font-mono text-sm"
               >
-                <div className="text-gray-400 space-y-1">
+                <div className="text-gray-400 space-y-1 ">
                   <div><span className="text-red-400">OS:</span> Kali Linux 2023.4</div>
                   <div><span className="text-red-400">Kernel:</span> 6.1.0-kali9-amd64</div>
                   <div><span className="text-red-400">Shell:</span> /bin/bash</div>

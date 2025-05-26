@@ -1,23 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
-import { FaTerminal } from 'react-icons/fa';
+import ContactForm from './ContactForm';
 
 const TerminalAbout = () => {
   const aboutRef = useRef<HTMLDivElement>(null);
-  const aboutInView = useInView(aboutRef, { once: true, threshold: 0.1 });
+  const aboutInView = useInView(aboutRef, { once: true, amount: 0.1 });
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [typingText, setTypingText] = useState('');
   const [currentLine, setCurrentLine] = useState(0);
 
-  const aboutText = [
-    "Hi, I'm Mert Karakuzu, Red Team Specialist",
+  const aboutText = useMemo(() => [
+    "Hi, I&apos;m Mert Karakuzu, Red Team Specialist",
     "Passionate about cybersecurity and ethical hacking",
     "Specialized in penetration testing and vulnerability analysis", 
     "Combining deep technical knowledge with business understanding",
     "Creating tailored security solutions for modern threats",
     "Ready to protect your digital infrastructure"
-  ];
+  ], []);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -30,34 +29,24 @@ const TerminalAbout = () => {
       let i = 0;
       const typeInterval = setInterval(() => {
         if (i < text.length) {
-          setTypingText(prev => prev + text[i]);
           i++;
         } else {
           clearInterval(typeInterval);
           setTimeout(() => {
             setCurrentLine(prev => prev + 1);
-            setTypingText(prev => prev + '\n');
           }, 1000);
         }
       }, 50);
       return () => clearInterval(typeInterval);
     }
-  }, [currentLine]);
+  }, [currentLine, aboutText]);
 
   const skills = [
     { name: "Web Application Security", level: 95, command: "nmap -sV -sC target.com" },
     { name: "Network Penetration", level: 90, command: "metasploit -x payload.rb" },
     { name: "Social Engineering", level: 85, command: "gophish --campaign phishing.json" },
     { name: "Mobile Security", level: 80, command: "frida -U -f com.app.target" },
-    { name: "Cloud Security", level: 88, command: "aws-security-scanner --deep" },
     { name: "Incident Response", level: 92, command: "volatility -f memdump.raw" }
-  ];
-
-  const certifications = [
-    { name: "OSCP", status: "ACTIVE", year: "2023" },
-    { name: "CEH", status: "ACTIVE", year: "2022" },
-    { name: "CISSP", status: "ACTIVE", year: "2024" },
-    { name: "GCIH", status: "ACTIVE", year: "2023" }
   ];
 
   const staggerContainer = {
@@ -81,7 +70,7 @@ const TerminalAbout = () => {
   };
 
   return (
-    <div id="about" className="md:py-20 py-10 bg-black text-green-400 relative overflow-hidden">
+    <div id="about" className=" py-4 bg-black text-green-400 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0">
         {/* Matrix Binary Rain */}
@@ -121,7 +110,7 @@ const TerminalAbout = () => {
           initial="hidden"
           animate={aboutInView ? "visible" : "hidden"}
           variants={staggerContainer}
-          className="flex flex-col lg:flex-row gap-12"
+          className="flex md:flex-col flex-col-reverse lg:flex-row md:gap-12 gap-8"
         >
           
           {/* Left Side - Profile Terminal */}
@@ -161,7 +150,6 @@ const TerminalAbout = () => {
                           </div>
                         </div>
                       </div>
-                      {/* Scan lines over image */}
                       <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,255,0,0.1)_50%)] bg-[length:100%_4px] pointer-events-none"></div>
                     </div>
                   </div>
@@ -175,7 +163,7 @@ const TerminalAbout = () => {
             {/* System Info Terminal */}
             <div className="bg-gray-900 rounded-lg border border-gray-700 p-4">
               <div className="font-mono text-sm space-y-1">
-                <div className="text-red-400">root@kali:~$ whoami --verbose</div>
+                <div className="text-red-400">root@kali:~$ whoami | grep -i &quot;ethical hacker&quot;</div>
                 <div className="text-gray-300 ml-4">Name: Mert Karakuzu</div>
                 <div className="text-gray-300 ml-4">Role: Red Team Specialist</div>
                 <div className="text-gray-300 ml-4">Job: Junior Pentester</div>
@@ -209,54 +197,10 @@ const TerminalAbout = () => {
               $ ./initiate_secure_contact.sh
             </div>
             
-            <form className="space-y-4">
-              {[
-                { id: 'name', label: 'Enter your name:', type: 'text' },
-                { id: 'email', label: 'Provide email:', type: 'email' },
-                { id: 'subject', label: 'Message subject:', type: 'text' }
-              ].map((field) => (
-                <div key={field.id} className="flex items-start">
-                  <span className="text-blue-400 mr-2">></span>
-                  <div className="flex-1">
-                    <label htmlFor={field.id} className="block text-cyan-400 mb-1">{field.label}</label>
-                    <input
-                      type={field.type}
-                      id={field.id}
-                      className="w-full bg-gray-800 border-b border-gray-700 focus:border-green-400 outline-none text-white px-2 py-1"
-                      required
-                    />
-                  </div>
-                </div>
-              ))}
-              
-              <div className="flex items-start">
-                <span className="text-blue-400 mr-2">></span>
-                <div className="flex-1">
-                  <label htmlFor="message" className="block text-cyan-400 mb-1">Type your message:</label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    className="w-full bg-gray-800 border border-gray-700 focus:border-green-400 outline-none text-white px-2 py-1 resize-none"
-                    required
-                  ></textarea>
-                </div>
-              </div>
-              
-              <div className="pt-4">
-                <motion.button
-                  whileHover={{ x: 5 }}
-                  whileTap={{ scale: 0.98 }}
-                  type="submit"
-                  className="bg-green-600 hover:bg-green-700 text-black font-bold py-2 px-4 rounded flex items-center gap-2"
-                >
-                  <FaTerminal />
-                  <span>Execute Send</span>
-                </motion.button>
-              </div>
-            </form>
+            <ContactForm />
             
             <div className="text-gray-500 text-xs mt-6">
-              // This connection is secured with end-to-end encryption
+              {`/* This connection is secured with end-to-end encryption */`}
             </div>
           </div>
         </motion.div>
@@ -291,11 +235,11 @@ const TerminalAbout = () => {
                 
                 <div className="text-gray-300 space-y-3 text-sm leading-relaxed">
                   <p>
-  Hi, I'm <span className="text-red-400 font-bold">Mert Karakuzu</span>, and my goal is to provide 
+  Hi, I&apos;m <span className="text-red-400 font-bold">Mert Karakuzu</span>, and my goal is to provide 
   top-notch cybersecurity services to protect businesses and individuals from the ever-evolving cyber threats.
 </p>
 <p>
-  I’m passionate about <span className="text-green-400">cybersecurity</span> and continuously learning to stay 
+  I&apos;m passionate about <span className="text-green-400">cybersecurity</span> and continuously learning to stay 
   ahead of the latest trends and technologies in the field.
 </p>
 <p>
@@ -309,13 +253,13 @@ const TerminalAbout = () => {
   tailored solutions to protect your business and personal data.
 </p>
 <p>
-  Whether you’re an individual seeking security for your digital presence or a business looking 
+  Whether you&apos;re an individual seeking security for your digital presence or a business looking 
   to strengthen your defenses, I provide comprehensive, cutting-edge cybersecurity solutions.
 </p>
 <p>
   Let me help you create a digital environment that is not only safe but also 
   <span className="text-red-400"> resilient against evolving threats</span>. 
-  Together, we’ll ensure your peace of mind in an increasingly connected world.
+  Together, we&apos;ll ensure your peace of mind in an increasingly connected world.
 </p>
 
                 </div>
@@ -365,57 +309,22 @@ const TerminalAbout = () => {
               </div>
             </div>
 
-            {/* Certifications Terminal
-            <div className="bg-gray-900 rounded-lg border border-gray-700 overflow-hidden">
-              <div className="bg-gray-800 px-4 py-2 border-b border-gray-700">
-                <div className="text-gray-400 text-sm font-mono">certifications.db</div>
-              </div>
-              
-              <div className="p-6 bg-black">
-                <div className="font-mono text-sm mb-4">
-                  <span className="text-red-400">root@kali</span>
-                  <span className="text-white">:</span>
-                  <span className="text-blue-400">~</span>
-                  <span className="text-white">$ </span>
-                  <span className="text-green-400">sqlite3 certs.db "SELECT * FROM certifications;"</span>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  {certifications.map((cert, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="bg-gray-800 border border-green-500/30 rounded p-3"
-                    >
-                      <div className="text-green-400 font-bold text-sm">{cert.name}</div>
-                      <div className="text-gray-400 text-xs">Year: {cert.year}</div>
-                      <div className="text-xs">
-                        <span className="text-green-400">Status: {cert.status}</span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </div> */}
-
             {/* Contact Button */}
             <motion.div className="flex md:flex-row flex-col md:space-x-4">
-              <motion.a 
+              {/* <motion.a 
                 whileHover={{ 
                   scale: 1.05,
                   boxShadow: "0 0 20px rgba(239, 68, 68, 0.5)" 
                 }}
                 whileTap={{ scale: 0.95 }}
                 href="#contact" 
-                className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 flex items-center shadow-lg font-mono border border-red-500/20"
+                className="bg-gradient-to-r w-full from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 flex items-center shadow-lg font-mono border border-red-500/20"
               >
                 <span className="mr-2">$</span>
                 ./initiate_contact.sh
-              </motion.a>
+              </motion.a>```` */}
 
-              <motion.a 
+              {/* <motion.a 
                 whileHover={{ 
                   scale: 1.05,
                   boxShadow: "0 0 20px rgba(34, 197, 94, 0.3)" 
@@ -426,7 +335,7 @@ const TerminalAbout = () => {
               >
                 <span className="mr-2">$</span>
                 ./download_resume.sh
-              </motion.a>
+              </motion.a> */}
             </motion.div>
           </motion.div>
         </motion.div>
