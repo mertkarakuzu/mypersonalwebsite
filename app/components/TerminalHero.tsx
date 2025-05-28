@@ -257,7 +257,7 @@ const TerminalHero = () => {
 
               <motion.div 
                 variants={fadeInUp}
-                className="flex justify-center flex-col md:flex-row lg:justify-start mt-0 md:space-x-4"
+                className="flex justify-center flex-col md:flex-row lg:justify-start mt-0 md:space-x-4 px-4"
               >
                 <motion.a 
                   whileHover={{ 
@@ -266,7 +266,8 @@ const TerminalHero = () => {
                   }}
                   whileTap={{ scale: 0.95 }}
                   href="#contact" 
-                  className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 flex items-center shadow-lg hover:shadow-xl font-mono border border-red-500/20"
+                  className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white font-bold py-3 px-8 
+                  rounded-lg transition-all duration-300 flex items-center shadow-lg hover:shadow-xl font-mono border border-red-500/20 md:text-base text-sm"
                 >
                   <span className="mr-2">$</span>
                   ./contact_me.sh
