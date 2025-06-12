@@ -166,13 +166,12 @@ const TerminalAbout = () => {
                 <div className="text-red-400">root@kali:~$ whoami | grep -i &quot;ethical hacker&quot;</div>
                 <div className="text-gray-300 ml-4">Name: Mert Karakuzu</div>
                 <div className="text-gray-300 ml-4">Role: Red Team Specialist</div>
-                <div className="text-gray-300 ml-4">Job: Junior Pentester</div>
                 <div className="text-green-400 ml-4">Status: Available for engagement</div>
                 <div className="text-blue-400 ml-4">Dokuz Eylül University</div>
                 <div className="text-purple-400 ml-4">Computer Science</div>
                 <div className="text-gray-300 ml-4">Location: Turkey/Izmir</div>
                 <div className="text-gray-300 ml-4">Email: krkz.mert@gmail.com</div>
-                <div className="text-gray-300 ml-4">Phone: +90 506 092 17 97</div>
+               
               </div>
             </div>
             {/* Contact Section */}
