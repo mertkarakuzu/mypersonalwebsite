@@ -38,7 +38,7 @@ export default function HomePage() {
       <TerminalHero />
 
       {/* Main Content */}
-      <main className="bg-gray-100 md:mb-8 mb-4">
+      <main className="bg-gray-100 md:mb-0 mb-0">
         {/* Services Section */}
         <TerminalServices/>
 
